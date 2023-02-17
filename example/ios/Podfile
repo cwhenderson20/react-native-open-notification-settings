@@ -47,11 +47,6 @@ target 'OpenNotificationSettingsExample' do
 
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
 
-  target 'OpenNotificationSettingsExampleTests' do
-    inherit! :complete
-    # Pods for testing
-  end
-
   post_install do |installer|
     react_native_post_install(
       installer,

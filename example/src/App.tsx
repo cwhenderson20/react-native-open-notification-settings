@@ -10,15 +10,15 @@ export default function App() {
   React.useEffect(() => {
     getDidOpenSettingsForNotification().then((res) => {
       if (res) {
-        showAlert();
+        respondToOpenSettings();
       }
     });
 
     const listener = onOpenSettingsForNotification(() => {
-      showAlert();
+      respondToOpenSettings();
     });
 
-    function showAlert() {
+    function respondToOpenSettings() {
       Alert.alert('Opened settings for notification');
     }
 
