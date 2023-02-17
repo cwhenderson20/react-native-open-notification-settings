@@ -1,18 +1,66 @@
 #import "OpenNotificationSettings.h"
 
-@implementation OpenNotificationSettings
+@implementation OpenNotificationSettings {
+  bool hasListeners;
+}
+
 RCT_EXPORT_MODULE()
 
-// Example method
-// See // https://reactnative.dev/docs/native-modules-ios
-RCT_REMAP_METHOD(multiply,
-                 multiplyWithA:(double)a withB:(double)b
-                 withResolver:(RCTPromiseResolveBlock)resolve
-                 withRejecter:(RCTPromiseRejectBlock)reject)
-{
-    NSNumber *result = @(a * b);
+- (NSArray<NSString *> *)supportedEvents {
+  return @[@"settings_for_notification_opened"];
+}
 
-    resolve(result);
++ (instancetype)sharedInstance {
+  static OpenNotificationSettings *sharedInstance = nil;
+  static dispatch_once_t onceToken;
+
+  dispatch_once(&onceToken, ^{
+    sharedInstance = [[OpenNotificationSettings alloc] init];
+    sharedInstance.didOpenSettingsForNotification = NO;
+  });
+
+  return sharedInstance;
+}
+
++ (id)allocWithZone:(NSZone *)zone {
+    static OpenNotificationSettings *sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [super allocWithZone:zone];
+    });
+
+    return sharedInstance;
+}
+
+- (void)startObserving {
+  hasListeners = YES;
+}
+
+- (void)stopObserving {
+  hasListeners = NO;
+}
+
+-(NSNumber *)getDidOpenSettingsForNotification {
+  if (_didOpenSettingsForNotification != NO) {
+    _didOpenSettingsForNotification = NO;
+    return @YES;
+  }
+  
+  return @NO;
+}
+
+- (void)openSettingsForNotification {
+  _didOpenSettingsForNotification = YES;
+  
+  if (hasListeners) {
+    [self sendEventWithName:@"settings_for_notification_opened" body:@{}];
+  }
+}
+
+RCT_EXPORT_METHOD(getDidOpenSettingsForNotification
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  resolve([self getDidOpenSettingsForNotification]);
 }
 
 // Don't compile this code when we build for the old architecture.

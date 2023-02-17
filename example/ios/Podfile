@@ -43,6 +43,10 @@ target 'OpenNotificationSettingsExample' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  permissions_path = '../node_modules/react-native-permissions/ios'
+
+  pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
+
   target 'OpenNotificationSettingsExampleTests' do
     inherit! :complete
     # Pods for testing

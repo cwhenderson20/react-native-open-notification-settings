@@ -2,11 +2,16 @@
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "RNOpenNotificationSettingsSpec.h"
 
-@interface OpenNotificationSettings : NSObject <NativeOpenNotificationSettingsSpec>
+@interface OpenNotificationSettings : RCTEventEmitter <NativeOpenNotificationSettingsSpec>
 #else
-#import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
 
-@interface OpenNotificationSettings : NSObject <RCTBridgeModule>
+@interface OpenNotificationSettings : RCTEventEmitter <RCTBridgeModule>
 #endif
+
+@property BOOL didOpenSettingsForNotification;
+
++ (instancetype)sharedInstance;
+- (void)openSettingsForNotification;
 
 @end

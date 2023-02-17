@@ -1,18 +1,47 @@
 import * as React from 'react';
-
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-open-notification-settings';
+import { Alert, Button, StyleSheet, View } from 'react-native';
+import {
+  getDidOpenSettingsForNotification,
+  onOpenSettingsForNotification,
+} from 'react-native-open-notification-settings';
+import { requestNotifications } from 'react-native-permissions';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-
   React.useEffect(() => {
-    multiply(3, 7).then(setResult);
+    getDidOpenSettingsForNotification().then((res) => {
+      if (res) {
+        showAlert();
+      }
+    });
+
+    const listener = onOpenSettingsForNotification(() => {
+      showAlert();
+    });
+
+    function showAlert() {
+      Alert.alert('Opened settings for notification');
+    }
+
+    return () => {
+      listener.remove();
+    };
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Button
+        title="Request permissions"
+        onPress={() => {
+          requestNotifications([
+            'alert',
+            'sound',
+            'badge',
+            'providesAppSettings',
+          ]).then((response) => {
+            Alert.alert(JSON.stringify(response));
+          });
+        }}
+      />
     </View>
   );
 }

@@ -1,3 +1,5 @@
+import type { EmitterSubscription } from 'react-native';
+import { NativeEventEmitter } from 'react-native';
 import { NativeModules, Platform } from 'react-native';
 
 const LINKING_ERROR =
@@ -16,7 +18,17 @@ const OpenNotificationSettings = NativeModules.OpenNotificationSettings
         },
       }
     );
+const eventEmitter = new NativeEventEmitter(OpenNotificationSettings);
 
-export function multiply(a: number, b: number): Promise<number> {
-  return OpenNotificationSettings.multiply(a, b);
+export function onOpenSettingsForNotification(
+  callback: () => void
+): EmitterSubscription {
+  return eventEmitter.addListener('settings_for_notification_opened', callback);
+}
+
+export function getDidOpenSettingsForNotification(): Promise<boolean> {
+  if (Platform.OS !== 'ios') {
+    return Promise.resolve(false);
+  }
+  return OpenNotificationSettings.getDidOpenSettingsForNotification();
 }
