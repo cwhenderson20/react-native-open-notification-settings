@@ -2,6 +2,8 @@
 
 Respond to the iOS [`openSettingsForNotification`](https://developer.apple.com/documentation/usernotifications/unusernotificationcenterdelegate/2981869-usernotificationcenter) API from React Native.
 
+![open_notification_settings](https://user-images.githubusercontent.com/5496110/219788770-d8673d43-57f2-4bb6-952e-32b8b840909a.png)
+
 ## Installation
 
 ```sh
